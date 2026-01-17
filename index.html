@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Will You Go Out With Me?</title>
+
   <style>
     body {
       margin: 0;
@@ -13,7 +14,6 @@
       overflow: hidden;
     }
 
-    /* Simple guaranteed background */
     .bg {
       position: fixed;
       inset: 0;
@@ -68,10 +68,11 @@
     .yes { background: #d4a017; color: #fff; }
     .no { background: #ddd; }
 
-    #response {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #d4a017;
+    small {
+      display: block;
+      margin-top: 15px;
+      color: #666;
+      font-size: 12px;
     }
 
     @keyframes fadeIn {
@@ -80,7 +81,9 @@
     }
   </style>
 </head>
+
 <body>
+
   <div class="bg" id="bg"></div>
   <div class="overlay"></div>
 
@@ -95,12 +98,14 @@
       </p>
 
       <button class="yes" onclick="sayYes()">Yes 💛</button>
-      <button class="no" onclick="sayNo()">Maybe 🙈</button>
-      <div id="response"></div>
+      <button class="no" onclick="sayMaybe()">Maybe 🙈</button>
+
+      <small>Clicking YES will notify me 💛</small>
     </div>
   </div>
 
   <script>
+    /* Background slideshow */
     const images = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg'];
     let i = 0;
     setInterval(() => {
@@ -108,16 +113,19 @@
       document.getElementById('bg').style.backgroundImage = `url('${images[i]}')`;
     }, 5000);
 
+    /* YES: notify + redirect */
     function sayYes() {
-      document.getElementById('response').innerText = 'You just made my Saraswati Puja perfect 💐';
+      fetch('/api/notify', { method: 'POST' })
+        .finally(() => {
+          window.location.href = 'video_yes.html';
+        });
     }
-    function sayNo() {
-      document.getElementById('response').innerText = 'Take your time… I’ll still be smiling 😊';
+
+    /* MAYBE: redirect only */
+    function sayMaybe() {
+      window.location.href = 'video_maybe.html';
     }
   </script>
+
 </body>
-
 </html>
-
-
-
