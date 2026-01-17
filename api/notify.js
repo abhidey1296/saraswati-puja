@@ -9,12 +9,14 @@ export default async function handler(req, res) {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
-      secure: true,
+      secure: true, // REQUIRED
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
+
+    await transporter.verify(); // 🔥 This line catches auth issues early
 
     await transporter.sendMail({
       from: `"Saraswati Puja 💛" <${process.env.EMAIL_USER}>`,
@@ -23,9 +25,9 @@ export default async function handler(req, res) {
       text: "She clicked YES on your Saraswati Puja website.",
     });
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Email failed" });
+    console.error("EMAIL ERROR:", error);
+    return res.status(500).json({ error: error.message });
   }
 }
